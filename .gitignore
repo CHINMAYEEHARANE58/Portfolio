@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.env
+.env.local
+playwright-report/
+test-results/
+coverage/
+.DS_Store
+*.tsbuildinfo
+.npm-cache/
+/.vscode/
+/*.pdf
+/*.png
+/*.jpeg

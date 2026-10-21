@@ -1,0 +1,5 @@
+import { ImageResponse } from "next/og";
+export const alt = "Chinmayee Harane — Software Engineer";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+export default function Image() { return new ImageResponse(<div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 74, background: "#09090f", color: "#f8fafc", fontFamily: "Arial, sans-serif" }}><div style={{ display: "flex", justifyContent: "space-between", color: "#22d3ee", fontSize: 22, letterSpacing: 3 }}><span>CH.</span><span>SOFTWARE ENGINEER</span></div><div style={{ display: "flex", flexDirection: "column", gap: 26 }}><span style={{ fontSize: 80, fontWeight: 700, lineHeight: 1.05 }}>Chinmayee Harane</span><span style={{ fontSize: 35, color: "#a1a1aa" }}>Engineering ideas into real-world products.</span></div><div style={{ display: "flex", justifyContent: "space-between", color: "#8b5cf6", fontSize: 22 }}><span>FULL STACK · BACKEND · SECURITY</span><span>PUNE, INDIA</span></div></div>, size); }

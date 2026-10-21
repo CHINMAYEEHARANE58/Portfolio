@@ -1,0 +1,8 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { ProjectExplorer } from "@/components/ProjectExplorer";
+import { earlierProjects } from "@/content/projects";
+import { profile } from "@/content/profile";
+import { pageMetadata } from "@/lib/metadata";
+export const metadata: Metadata = pageMetadata("Projects | Chinmayee Harane", "Explore software projects across full-stack development, mobile, frontend, backend, and data engineering.", "/projects");
+export default function Projects() { return <><div className="page-hero container"><p className="eyebrow">PROJECTS / SELECTED WORK</p><h1>Ideas brought <em>to life.</em></h1><p className="page-lede">Explore 15 recent, verified GitHub web projects, plus GigX and the Smart Library mobile app. Source links and demos appear where available.</p><a className="text-link" href={profile.social.github} target="_blank" rel="noopener noreferrer">Explore my GitHub profile <span aria-hidden="true">↗</span></a></div><section className="section-pad surface-section"><div className="container"><Suspense fallback={<p className="muted">Loading projects…</p>}><ProjectExplorer/></Suspense></div></section><section className="section-pad container archive-section"><p className="eyebrow">MORE EXPLORATIONS</p><h2>Earlier <em>work.</em></h2><p className="muted">Additional links retained from my previous portfolio.</p><div className="archive-grid">{earlierProjects.map(project => <a key={project.title} href={project.url} target="_blank" rel="noopener noreferrer"><span>{project.title}</span><span aria-hidden="true">↗</span></a>)}</div></section></>; }
