@@ -1,5 +1,22 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+test("tiny pixel cat stays visible and follows the pointer", async ({ page }) => {
+  await page.goto("/");
+  const cat = page.getByTestId("cursor-cat");
+  await expect(cat).toBeVisible();
+  await expect(cat).toHaveCSS("pointer-events", "none");
+
+  if (test.info().project.name === "desktop") {
+    await page.mouse.move(180, 180);
+    await expect.poll(async () => (await cat.boundingBox())?.x ?? -1).toBeLessThan(180);
+    await page.mouse.move(1100, 220);
+    await expect.poll(async () => (await cat.boundingBox())?.x ?? -1, { timeout: 3000 }).toBeGreaterThan(900);
+    await expect(cat).toHaveAttribute("data-direction", "right");
+  }
+
+  await page.goto("/projects");
+  await expect(cat).toBeVisible();
+});
 test("homepage, navigation, case studies, and resume", async ({ page, request }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Hi, I'm Chinmayee/ })).toBeVisible();
