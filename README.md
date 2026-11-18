@@ -2,7 +2,7 @@
 
 GitHub repository: [CHINMAYEEHARANE58/Portfolio](https://github.com/CHINMAYEEHARANE58/Portfolio). The local `main` branch tracks `origin/main`.
 
-A multi-page Next.js App Router portfolio built with TypeScript. The site presents verified experience, seven project case studies, and ten additional web projects, with a searchable directory, responsive navigation, theme persistence, and an optional server-backed contact form. The original static site is retained in `legacy/` for reference.
+A multi-page Next.js App Router portfolio built with TypeScript. The homepage uses a compact single-page presentation with a live year counter, experience and education, a public GitHub contribution snapshot, selected project cards, highlights, contact, and a floating dock. The full directory includes twelve case studies and ten additional web projects. The original static site is retained in `legacy/` for reference.
 
 ## Local setup
 
@@ -36,12 +36,13 @@ The end-to-end tests start their own server on port 3100 and mock the email API 
 
 - Profile, skills, and experience: `src/content/profile.ts`.
 - Projects, links, status, evidence notes, and case-study text: `src/content/projects.ts`. Add a new entry to the array to generate its card and `/projects/[slug]` page. Categories come from the typed `categories` list.
-- Smaller GitHub web projects: `src/content/more-web-projects.ts`. These join the directory search and filters without implying a detailed case study. Five repository-backed web case studies and ten smaller web projects show 15 distinct, recent, verified GitHub repositories. GigX (live website, no verified public repository) and the Smart Library mobile app remain alongside them. The list is curated from the recent repositories, not an automatic feed; empty repositories, portfolio copies, duplicate implementations, and infrastructure labs are excluded.
+- Homepage section content and featured-project selection: `src/content/showcase.ts`. The activity snapshot is `src/content/github-activity.json`; refresh it with `node scripts/update-github-activity.mjs`.
+- Smaller GitHub web projects: `src/content/more-web-projects.ts`. These join the directory search and filters without implying a detailed case study. The directory now includes recent systems such as TeamFlow, StockPilot, SentinelOps, DocuMind, and CareConnect alongside earlier work. Empty repositories, portfolio copies, duplicate implementations, and infrastructure labs are excluded.
 - Earlier portfolio links are retained in the `earlierProjects` list in the same file; they are displayed separately without unverified status or case-study claims.
-- Resume: replace `public/resume/Chinmayee_Harane_Resume.pdf`. Keep the path in `src/content/profile.ts` in sync if renaming.
+- Resume: edit `scripts/build-resume.py` and run it with Python and ReportLab to regenerate `public/resume/Chinmayee_Harane_Resume.pdf` and `output/pdf/Chinmayee_Harane_Resume.pdf`. Keep the path in `src/content/profile.ts` in sync if renaming.
 - Portrait: `public/images/chinmayee.jpg`.
 - Availability badge: `NEXT_PUBLIC_AVAILABLE_FOR_WORK=true` when applicable. The default is “Open to conversations.”
-- The original typing roles and 100ms typing/backspacing speed are in `src/content/profile.ts` and `src/components/TypedRole.tsx`.
+- The homepage's live year animation is in `src/components/LiveYearCounter.tsx`. Earlier typing-role code remains in `src/components/TypedRole.tsx` for other uses.
 
 Project illustrations other than the existing GigX image are abstract artwork, not screenshots. SplitStream's planned modules and integrations are explicitly separated from its current milestone. InternAgent's external submissions remain disabled; ClosetAI's AI functionality requires a configured server-side provider and its development mock is labeled.
 

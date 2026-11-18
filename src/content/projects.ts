@@ -6,11 +6,81 @@ export type Project = {
   summary: string; problem: string; approach: string; architecture: string;
   features: string[]; decisions: string[]; challenges: string[]; learnings: string[];
   stack: string[]; planned?: string[]; github?: string; demo?: string;
-  art: "agent" | "closet" | "split" | "pass" | "gigx" | "library" | "finsight";
+  art: "agent" | "closet" | "split" | "pass" | "gigx" | "library" | "finsight" | "team" | "stock" | "sentinel" | "docu" | "care";
   sourceNote: string;
 };
 
 export const projects: Project[] = [
+  {
+    slug: "careconnect", title: "CareConnect", subtitle: "Appointments with reliable booking rules", date: "November 2026", dateSort: "2026-11-18", category: ["Mobile", "Backend"], status: "In Progress", art: "care",
+    summary: "A Flutter clinic scheduling app for patients, doctors, and administrators, with database-enforced appointment integrity.",
+    problem: "Patients and clinic teams need an accurate, shared view of availability and appointments.",
+    approach: "Model clinic schedules and booking constraints in PostgreSQL, then build role-specific mobile flows around them.",
+    architecture: "Flutter clients use Supabase Auth and PostgreSQL. Row-level security protects private data; a booking RPC and exclusion constraints reject overlapping appointments, including concurrent requests.",
+    features: ["Patient search, booking, rescheduling, and cancellation", "Clinic and doctor schedule administration", "In-app notifications and optional outbound provider integration"],
+    decisions: ["Keep booking integrity in the database instead of trusting the client.", "Use fictional demo clinics and avoid payment claims."],
+    challenges: ["Maintaining correct time zones, role boundaries, and concurrent booking behavior."],
+    learnings: ["Database constraints and RLS make cross-role mobile workflows safer."],
+    stack: ["Flutter", "Dart", "Supabase", "PostgreSQL", "RLS"],
+    planned: ["Production provider and deployment validation"],
+    github: "https://github.com/CHINMAYEEHARANE58/CareConnect", sourceNote: "Public README and architecture reviewed in November 2026. Demo clinics are fictional and booking has no payment flow."
+  },
+  {
+    slug: "stockpilot", title: "StockPilot", subtitle: "Inventory that stays accountable", date: "November 2026", dateSort: "2026-11-05", category: ["Full Stack", "Backend", "Data Engineering"], status: "In Progress", art: "stock",
+    summary: "A small-business inventory and order system with an Angular admin app, Spring Boot API, and append-only stock ledger.",
+    problem: "Stock balances can drift when purchasing, reservations, fulfillment, and returns update separate records.",
+    approach: "Centralize stock commands in database transactions and make movements auditable.",
+    architecture: "The Angular UI calls Spring Boot services. PostgreSQL stores catalog, orders, reservations, and the movement ledger. A transactional outbox publishes events to Kafka.",
+    features: ["Catalog, purchasing, sales, and warehouse workflows", "Stock reservations and idempotent commands", "Reconciliation and operational reports"],
+    decisions: ["Lock balance rows before stock mutations.", "Write ledger and outbox records in the same transaction as the balance change."],
+    challenges: ["Preventing overselling and duplicate stock application during concurrent requests."],
+    learnings: ["Transactional integrity matters more than a polished dashboard when inventory is the source of truth."],
+    stack: ["Angular", "TypeScript", "Spring Boot", "Java", "PostgreSQL", "Kafka"],
+    planned: ["Production deployment validation"],
+    github: "https://github.com/CHINMAYEEHARANE58/StockPilot", sourceNote: "Public README and repository structure reviewed in November 2026; no public production deployment was verified."
+  },
+  {
+    slug: "documind", title: "DocuMind", subtitle: "Answers grounded in your documents", date: "November 2026", dateSort: "2026-11-04", category: ["Full Stack", "AI / ML", "Backend"], status: "In Progress", art: "docu",
+    summary: "A private document workspace for uploading files, asking questions, and inspecting cited source passages.",
+    problem: "A useful document assistant must show where an answer came from and respect workspace access boundaries.",
+    approach: "Build permission-scoped retrieval, verifiable citations, and a deterministic local test path before real provider use.",
+    architecture: "React and TypeScript call a Django API; Celery processes files, private object storage holds originals, and PostgreSQL full-text search plus pgvector retrieve candidate passages.",
+    features: ["Private document uploads and version records", "Workspace-scoped hybrid retrieval", "Answer citations checked against retrieved passages"],
+    decisions: ["Treat local mock providers as deterministic test doubles, not production AI.", "Verify cited IDs against authorized retrieval results."],
+    challenges: ["Balancing answer quality with access control, provenance, and asynchronous ingestion."],
+    learnings: ["Reliable RAG depends on storage, retrieval, permission checks, and citation validation together."],
+    stack: ["React", "TypeScript", "Django", "Celery", "PostgreSQL", "pgvector"],
+    planned: ["Configure and validate a real AI provider for deployment"],
+    github: "https://github.com/CHINMAYEEHARANE58/DocuMind", sourceNote: "Public README reviewed in November 2026. The documented local default uses mock embeddings and extractive answers."
+  },
+  {
+    slug: "sentinelops", title: "SentinelOps", subtitle: "Security events into investigations", date: "November 2026", dateSort: "2026-11-04", category: ["Full Stack", "Backend", "Cybersecurity"], status: "In Progress", art: "sentinel",
+    summary: "A defensive security monitoring platform that ingests events, evaluates detection rules, and organizes incident response.",
+    problem: "Security teams need to connect noisy events to evidence-backed alerts and actionable investigations.",
+    approach: "Create a validated ingestion path and rules engine, then expose alerts and incidents through a responsive dashboard.",
+    architecture: "A Go API and worker use PostgreSQL, ClickHouse, Redis, and SSE. A React and TypeScript frontend presents the security operations workspace.",
+    features: ["Validated event ingestion and duplicate safety", "Rule-based alerts with linked evidence", "Incident notes, assignment, reports, and live summaries"],
+    decisions: ["Redact secrets during ingestion and quarantine malformed events.", "Keep a production-readiness review with explicit remaining blockers."],
+    challenges: ["Preserving evidence and organization boundaries across high-volume event workflows."],
+    learnings: ["Operational security products need explainable detections and auditable handling, not only charts."],
+    stack: ["Go", "React", "TypeScript", "ClickHouse", "PostgreSQL", "Redis"],
+    planned: ["Complete production readiness gate"],
+    github: "https://github.com/CHINMAYEEHARANE58/SentinelOps", demo: "https://sentinel-ops-khaki.vercel.app/", sourceNote: "Public README and production-readiness notes reviewed in November 2026. Live URL is a verified preview, not evidence of a complete production deployment."
+  },
+  {
+    slug: "teamflow", title: "TeamFlow", subtitle: "A workspace for work in motion", date: "October 2026", dateSort: "2026-10-24", category: ["Full Stack", "Backend"], status: "In Progress", art: "team",
+    summary: "A multi-workspace project management app with tasks, sprints, role controls, collaboration, and reporting.",
+    problem: "Teams need one place to coordinate projects while keeping workspace data and permissions separate.",
+    approach: "Build tenant-aware workflows and durable events across planning, execution, and reporting.",
+    architecture: "Next.js 16 and TypeScript use PostgreSQL through Prisma, Redis for production rate limits and realtime fanout, and private object storage for attachments.",
+    features: ["Workspace membership and role permissions", "Tasks, board, calendar, dependencies, and sprints", "Reports, notifications, and versioned task APIs"],
+    decisions: ["Check tenant membership server-side for each mutation.", "Reject stale task updates with version checks and replay durable events after reconnect."],
+    challenges: ["Keeping collaboration state consistent across sessions and workspaces."],
+    learnings: ["Explicit authorization and event durability are essential to multi-tenant collaboration."],
+    stack: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Redis", "WebSockets"],
+    planned: ["Production service configuration and readiness validation"],
+    github: "https://github.com/CHINMAYEEHARANE58/TeamFlow", sourceNote: "Public README and deployment notes reviewed in November 2026; local fallbacks are not presented as production services."
+  },
   {
     slug: "internagent", title: "InternAgent", subtitle: "A careful path from discovery to application", date: "October 2026", dateSort: "2026-10-17", category: ["Full Stack", "Backend", "AI / ML"], status: "In Progress", art: "agent",
     summary: "An internship assistant with authenticated dashboards, saved jobs, resume workflows, and evidence-bound application drafts.",

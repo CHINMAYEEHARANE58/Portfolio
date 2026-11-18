@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-test("homepage, navigation, case studies, and resume", async ({ page, request }, testInfo) => {
+test("homepage, navigation, case studies, and resume", async ({ page, request }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: /Engineering ideas into/ })).toBeVisible();
-  if (testInfo.project.name === "mobile") { await page.getByRole("button", { name: "Open menu" }).click(); await page.getByRole("navigation", { name: "Mobile navigation" }).getByRole("link", { name: "Projects" }).click(); }
-  else await page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Projects" }).click();
+  await expect(page.getByRole("heading", { name: /Hi, I'm Chinmayee/ })).toBeVisible();
+  await expect(page.getByText(/2026\./).first()).toBeVisible();
+  await page.getByRole("navigation", { name: "Quick navigation" }).getByRole("link", { name: "Jump to projects" }).click();
+  await expect(page).toHaveURL(/#projects$/);
+  await page.getByRole("link", { name: "all case studies" }).click();
   await expect(page).toHaveURL(/\/projects$/);
   await page.getByRole("link", { name: /Read SplitStream case study/ }).click();
   await expect(page.getByRole("heading", { name: /SplitStream/ })).toBeVisible();
@@ -26,10 +28,10 @@ test("project filters and shareable search", async ({ page }) => {
 });
 test("theme persists, contact states, and 404", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Switch to light theme" }).click();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.getByRole("button", { name: "Switch to dark theme" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.reload();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.goto("/contact");
   await page.getByRole("button", { name: /Send message/ }).click();
   await expect(page.getByRole("alert")).toBeVisible();
@@ -58,7 +60,7 @@ test("automated accessibility on main routes", async ({ page }) => {
 test("light theme passes accessibility checks", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await page.getByRole("button", { name: "Switch to light theme" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   for (const route of ["/", "/projects", "/contact"]) {
     await page.goto(route);
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
@@ -82,7 +84,7 @@ test("responsive layouts stay within the viewport", async ({ page }) => {
 });
 test("mobile menu traps focus and closes with Escape", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto("/");
+  await page.goto("/projects");
   await page.getByRole("button", { name: "Open menu" }).click();
   const nav = page.getByRole("navigation", { name: "Mobile navigation" });
   await expect(nav).toBeVisible();

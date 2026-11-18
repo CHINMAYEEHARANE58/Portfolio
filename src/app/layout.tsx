@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { pageMetadata } from "@/lib/metadata";
 import Script from "next/script";
 import "./globals.css";
+import "./showcase.css";
 
 export const metadata: Metadata = { ...pageMetadata("Chinmayee Harane | Software Engineer", "Software engineer building full-stack applications and exploring backend systems, data, and cybersecurity."), ...(process.env.NEXT_PUBLIC_SITE_URL ? { metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL) } : {}), applicationName: "Chinmayee Harane Portfolio" };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, colorScheme: "dark light" };
