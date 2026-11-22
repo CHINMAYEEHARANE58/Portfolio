@@ -1,8 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { projects } from "@/content/projects";
 import { moreWebProjects } from "@/content/more-web-projects";
+import { featuredProjectSlugs, featuredVisuals, moreRecentProjectTitles } from "@/content/showcase";
 import { filterProjects, filterWebProjects, isCategory, sortedProjects } from "@/lib/projects";
 describe("project directory", () => {
+  it("features requested projects and links recent builds to verified entries", () => {
+    expect(featuredProjectSlugs).toContain("closetai");
+    expect(featuredProjectSlugs).toContain("gigx");
+    expect(new Set(featuredProjectSlugs).size).toBe(featuredProjectSlugs.length);
+    expect(featuredProjectSlugs.every(slug => projects.some(project => project.slug === slug) && featuredVisuals[slug])).toBe(true);
+    expect(moreRecentProjectTitles.every(title => moreWebProjects.some(project => project.title === title))).toBe(true);
+  });
   it("filters by category and technology", () => {
     expect(filterProjects(projects, "Mobile").map(item => item.slug)).toEqual(["careconnect", "smart-library-manager"]);
     expect(filterProjects(projects, "All", "Axum").map(item => item.slug)).toEqual(["grabapass"]);

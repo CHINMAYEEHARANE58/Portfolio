@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { profile, experience } from "@/content/profile";
-import { education, featuredProjectSlugs, featuredVisuals, highlights } from "@/content/showcase";
+import { education, featuredProjectSlugs, featuredVisuals, highlights, moreRecentProjectTitles } from "@/content/showcase";
 import { getProject } from "@/content/projects";
-import { LiveYearCounter } from "@/components/LiveYearCounter";
+import { moreWebProjects } from "@/content/more-web-projects";
+import { LiveAgeCounter } from "@/components/LiveAgeCounter";
 import { GitHubHeatmap } from "@/components/GitHubHeatmap";
 import { FloatingDock } from "@/components/FloatingDock";
 
@@ -13,24 +14,67 @@ const featured = featuredProjectSlugs.map(slug => {
   return { project, visual: featuredVisuals[slug] };
 });
 
+const moreRecent = moreRecentProjectTitles.map(title => {
+  const project = moreWebProjects.find(item => item.title === title);
+  if (!project) throw new Error(`Missing recent project: ${title}`);
+  return project;
+});
+
 function ProjectVisual({ slug, label, image }: { slug: string; label: string; image?: string }) {
-  if (image) return <div className="showcase-project-visual"><Image src={image} alt={label} fill sizes="(max-width: 700px) 100vw, 50vw"/></div>;
+  if (image) return <div className="showcase-project-visual"><Image src={image} alt={label} fill sizes="(max-width: 700px) 100vw, 50vw" unoptimized={slug === "gigx"}/></div>;
   return <div className={`showcase-project-visual showcase-mock ${slug}`} role="img" aria-label={label}>
+    {slug === "closetai" && <div className="mock-window mock-closet"><div className="mock-titlebar"><i/><i/><i/><b>ClosetAI</b></div><div className="mock-closet-content"><small>YOUR DIGITAL WARDROBE</small><strong>Dress like yourself.</strong><p>Plan looks with the pieces you already own.</p><div className="mock-outfit-row"><span>Everyday</span><span>Workday</span><span>Weekend</span></div></div></div>}
     {slug === "documind" && <div className="mock-window"><div className="mock-titlebar"><i/><i/><i/><b>DocuMind</b></div><div className="mock-docu-grid"><div className="mock-docu-sidebar"><span>Documents</span><b>Atlas handbook</b><b>Meeting notes</b><b>Product plan</b></div><div className="mock-docu-answer"><small>ASK YOUR WORKSPACE</small><strong>Answers with sources.</strong><p>Search across documents and inspect the passage behind every answer.</p><span>↗ Source 01</span><span>↗ Source 02</span></div></div></div>}
     {slug === "careconnect" && <div className="mock-phone"><div className="mock-phone-notch"/><small>CareConnect</small><strong>Find care near you.</strong><p>Doctors · Clinics · Appointments</p><div className="mock-phone-search">⌕ &nbsp; Search by specialty</div><div className="mock-appointment"><span>Today</span><b>Available slots</b><i>10:30</i><i>11:15</i></div></div>}
     {slug === "internagent" && <div className="mock-window mock-agent"><div className="mock-titlebar"><i/><i/><i/><b>InternAgent</b></div><div className="mock-agent-content"><small>YOUR APPLICATION WORKSPACE</small><strong>Find the right next step.</strong><p>Saved roles, resume workflows, and application drafts ready for your review.</p><div className="mock-agent-row"><span>Software Engineering Intern</span><b>Saved</b></div><div className="mock-agent-row"><span>Full Stack Internship</span><b>Review</b></div></div></div>}
+    {slug === "splitstream" && <div className="mock-window mock-split"><div className="mock-titlebar"><i/><i/><i/><b>SplitStream</b></div><div className="mock-split-content"><small>GROUP BALANCES</small><strong>Everyone stays in sync.</strong><div className="mock-split-balance"><span>You are owed</span><b>₹2,480</b></div><div className="mock-split-row"><span>Weekend trip</span><b>Settled</b></div><div className="mock-split-row"><span>Shared groceries</span><b>Pending</b></div></div></div>}
+    {slug === "finsight" && <div className="mock-window mock-fin"><div className="mock-titlebar"><i/><i/><i/><b>FinSight</b></div><div className="mock-fin-content"><small>PERSONAL FINANCE</small><strong>See the whole picture.</strong><div className="mock-fin-chart"><i/><i/><i/><i/><i/><i/><i/><i/></div><div className="mock-fin-metrics"><span>Income <b>↑ 12%</b></span><span>Savings <b>↑ 8%</b></span></div></div></div>}
   </div>;
 }
 
 export default function Home() {
   return <div className="reference-portfolio" id="home">
     <div className="showcase-shell">
-      <section className="showcase-hero" aria-labelledby="showcase-title"><div><h1 id="showcase-title">Hi, I&apos;m<br/>Chinmayee</h1><p className="showcase-hero-line"><LiveYearCounter/> <span>/ Software Engineer / Turning ideas into reliable software</span></p></div><Image className="showcase-avatar" src="/images/chinmayee.jpg" alt="Chinmayee Harane" width={126} height={126} priority/></section>
+      <section className="showcase-hero" aria-labelledby="showcase-title"><div><h1 id="showcase-title">Hi, I&apos;m<br/>Chinmayee</h1><p className="showcase-hero-line"><LiveAgeCounter/> <span>/ Software Engineer / Turning ideas into reliable software</span></p></div><div className="showcase-avatar"><Image src="/images/chinmayee-portrait.png" alt="Chinmayee Harane" width={126} height={126} priority unoptimized/></div></section>
       <section className="showcase-section" id="about"><h2>About</h2><p className="showcase-about-copy">I&apos;m a software engineering student building full-stack products, data-aware systems, and security-minded tools. I like making complicated workflows feel simple, then making the system behind them dependable. My work spans a live healthcare platform at iCliniq, enterprise cybersecurity at Nykaa, and projects across web and mobile.</p></section>
       <section className="showcase-section" id="experience"><h2>Experience</h2><div className="showcase-list">{experience.map(item => <article className="showcase-list-item" key={item.company}><div className={`showcase-org-mark ${item.company.toLowerCase()}`}>{item.company === "Nykaa" ? "N" : "iC"}</div><div className="showcase-list-body"><div className="showcase-list-title"><h3>{item.company}</h3><span>{item.period}</span></div><p className="showcase-role">{item.role}</p><p className="showcase-list-detail">{item.summary}</p><ul>{item.details.slice(0, 2).map(detail => <li key={detail}>{detail}</li>)}</ul></div></article>)}</div></section>
       <section className="showcase-section" id="education"><h2>Education</h2><div className="showcase-list">{education.map(item => <article className="showcase-list-item showcase-education-row" key={item.institution}><div className="showcase-org-mark education">{item.mark}</div><div className="showcase-list-body"><div className="showcase-list-title"><h3>{item.institution}</h3><span>{item.dates}</span></div><p className="showcase-role">{item.label}</p></div></article>)}</div></section>
       <section className="showcase-section showcase-centered" id="github"><span className="showcase-section-pill">GitHub</span><h2>Recent Activity</h2><p>A snapshot of my public contributions.</p><GitHubHeatmap/></section>
-      <section className="showcase-section showcase-centered" id="projects"><span className="showcase-section-pill">Projects</span><h2>Selected work</h2><p>Thoughtful systems across collaboration, inventory, security, document intelligence, and healthcare.</p><p className="showcase-more">See more of my projects on <a href={profile.social.github} target="_blank" rel="noopener noreferrer">GitHub</a> or browse <Link href="/projects">all case studies</Link>.</p><div className="showcase-project-grid">{featured.map(({ project, visual }) => <article className="showcase-project-card" key={project.slug}><Link className="showcase-image-link" href={`/projects/${project.slug}`} aria-label={`Read ${project.title} case study`}><ProjectVisual slug={project.slug} label={visual.label} image={visual.image}/></Link><div className="showcase-project-body"><div className="showcase-project-name"><h3><Link href={`/projects/${project.slug}`}>{project.title}</Link></h3><span>{project.status === "In Progress" ? "Active" : "Completed"}</span></div><p className="showcase-project-date">{project.date}</p><p className="showcase-project-summary">{project.summary}</p><ul>{project.features.slice(0, 2).map(feature => <li key={feature}>{feature}.</li>)}</ul><div className="showcase-tags">{project.stack.slice(0, 7).map(tag => <span key={tag}>{tag}</span>)}</div><div className="showcase-project-actions"><a href={project.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>{project.demo && <a href={project.demo} target="_blank" rel="noopener noreferrer">Live Preview ↗</a>}<Link href={`/projects/${project.slug}`}>Case study ↗</Link></div></div></article>)}</div></section>
+      <section className="showcase-section showcase-centered" id="projects">
+        <span className="showcase-section-pill">Projects</span>
+        <h2>Selected work</h2>
+        <p>From ClosetAI and GigX to collaboration, finance, security, and healthcare tools.</p>
+        <p className="showcase-more">See more of my projects on <a href={profile.social.github} target="_blank" rel="noopener noreferrer">GitHub</a> or browse <Link href="/projects">all case studies</Link>.</p>
+        <div className="showcase-project-grid">
+          {featured.map(({ project, visual }) => <article className="showcase-project-card" key={project.slug}>
+            <Link className="showcase-image-link" href={"/projects/" + project.slug} aria-label={"Read " + project.title + " case study"}>
+              <ProjectVisual slug={project.slug} label={visual.label} image={visual.image}/>
+            </Link>
+            <div className="showcase-project-body">
+              <div className="showcase-project-name"><h3><Link href={"/projects/" + project.slug}>{project.title}</Link></h3><span>{project.status === "In Progress" ? "Active" : "Completed"}</span></div>
+              <p className="showcase-project-date">{project.date}</p>
+              <p className="showcase-project-summary">{project.summary}</p>
+              <ul>{project.features.slice(0, 2).map(feature => <li key={feature}>{feature}.</li>)}</ul>
+              <div className="showcase-tags">{project.stack.slice(0, 7).map(tag => <span key={tag}>{tag}</span>)}</div>
+              <div className="showcase-project-actions">
+                {project.github && <a href={project.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>}
+                {project.demo && <a href={project.demo} target="_blank" rel="noopener noreferrer">Live Preview ↗</a>}
+                <Link href={"/projects/" + project.slug}>Case study ↗</Link>
+              </div>
+            </div>
+          </article>)}
+        </div>
+        <div className="showcase-recent-work">
+          <h3>More recent builds</h3>
+          <div className="showcase-recent-grid">
+            {moreRecent.map(project => <article className="showcase-recent-card" key={project.title}>
+              <div><h4>{project.title}</h4><span>{project.note}</span></div>
+              <p>{project.summary}</p>
+              <a href={project.github} target="_blank" rel="noopener noreferrer">View source ↗</a>
+            </article>)}
+          </div>
+        </div>
+      </section>
       <section className="showcase-section showcase-centered" id="highlights"><span className="showcase-section-pill">Highlights</span><h2>I like building things</h2><p>Challenges and communities have shaped how I learn, lead, and ship.</p><div className="showcase-highlight-grid">{highlights.map((item, index) => <article className="showcase-highlight-card" key={item.title}><div className={`showcase-highlight-art art-${index}`} aria-hidden="true"><span>{item.symbol}</span></div><div><small>{item.eyebrow}</small><h3>{item.title}</h3><p>{item.description}</p></div></article>)}</div></section>
       <section className="showcase-section showcase-centered showcase-contact" id="contact"><span className="showcase-section-pill">Contact</span><h2>Get in Touch</h2><p>Have a project, an internship opportunity, or a good question? Send me <a href={`mailto:${profile.email}`}>an email</a>, and I&apos;ll respond when I can.</p><div className="showcase-contact-links"><a href={profile.resume} target="_blank" rel="noopener noreferrer">View résumé ↗</a><a href={profile.social.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href={profile.social.leetcode} target="_blank" rel="noopener noreferrer">LeetCode ↗</a></div></section>
       <p className="showcase-signoff">Made by Chinmayee Harane · Pune, India</p>

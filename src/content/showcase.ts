@@ -1,12 +1,18 @@
-export const featuredProjectSlugs = ["teamflow", "stockpilot", "sentinelops", "documind", "careconnect", "internagent"] as const;
+export const featuredProjectSlugs = ["closetai", "gigx", "teamflow", "stockpilot", "sentinelops", "documind", "careconnect", "internagent", "splitstream", "finsight"] as const;
+
+export const moreRecentProjectTitles = ["Skillora", "ClubChain", "Vera merchant bot"] as const;
 
 export const featuredVisuals: Record<(typeof featuredProjectSlugs)[number], { image?: string; label: string; variant: string }> = {
+  closetai: { label: "Illustrative ClosetAI wardrobe interface", variant: "closetai" },
+  gigx: { image: "/images/gigx.png", label: "GigX freelancer marketplace screenshot", variant: "gigx" },
   teamflow: { image: "/images/projects/teamflow.png", label: "TeamFlow dashboard screenshot", variant: "teamflow" },
   stockpilot: { image: "/images/projects/stockpilot.jpg", label: "StockPilot dashboard screenshot", variant: "stockpilot" },
   sentinelops: { image: "/images/projects/sentinelops.jpg", label: "SentinelOps dashboard screenshot", variant: "sentinelops" },
   documind: { label: "Illustrative DocuMind interface", variant: "documind" },
   careconnect: { label: "Illustrative CareConnect mobile interface", variant: "careconnect" },
   internagent: { label: "Illustrative InternAgent dashboard", variant: "internagent" },
+  splitstream: { label: "Illustrative SplitStream group balance interface", variant: "splitstream" },
+  finsight: { label: "Illustrative FinSight finance dashboard", variant: "finsight" },
 };
 
 export const education = [

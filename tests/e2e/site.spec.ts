@@ -18,9 +18,20 @@ test("tiny pixel cat stays visible and follows the pointer", async ({ page }) =>
   await expect(cat).toBeVisible();
 });
 test("homepage, navigation, case studies, and resume", async ({ page, request }) => {
+  const hydrationErrors: string[] = [];
+  page.on("console", message => {
+    if (message.type() === "error" && message.text().includes("Hydration failed")) hydrationErrors.push(message.text());
+  });
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Hi, I'm Chinmayee/ })).toBeVisible();
-  await expect(page.getByText(/2026\./).first()).toBeVisible();
+  await expect(page.getByTitle("Age in years, updating live")).toContainText(/^\d{1,3}\.\d{10}/);
+  const portrait = page.getByRole("img", { name: "Chinmayee Harane" });
+  await expect(portrait).toHaveAttribute("src", /chinmayee-portrait/);
+  await expect.poll(() => portrait.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await expect(page.locator(".showcase-project-grid").getByRole("heading", { name: "ClosetAI" })).toBeVisible();
+  await expect(page.locator(".showcase-project-grid").getByRole("heading", { name: "GigX" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "More recent builds" })).toBeVisible();
+  expect(hydrationErrors).toEqual([]);
   await page.getByRole("navigation", { name: "Quick navigation" }).getByRole("link", { name: "Jump to projects" }).click();
   await expect(page).toHaveURL(/#projects$/);
   await page.getByRole("link", { name: "all case studies" }).click();
