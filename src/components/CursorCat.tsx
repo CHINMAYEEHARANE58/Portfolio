@@ -107,9 +107,11 @@ export function CursorCat() {
     window.addEventListener("pointermove", follow, { passive: true });
     window.addEventListener("resize", keepInView);
     reducedMotion.addEventListener("change", motionChanged);
+    cat.dataset.ready = "true";
 
     return () => {
       stop();
+      delete cat.dataset.ready;
       window.removeEventListener("pointermove", follow);
       window.removeEventListener("resize", keepInView);
       reducedMotion.removeEventListener("change", motionChanged);

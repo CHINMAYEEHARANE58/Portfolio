@@ -4,6 +4,7 @@ test("tiny pixel cat stays visible and follows the pointer", async ({ page }) =>
   await page.goto("/");
   const cat = page.getByTestId("cursor-cat");
   await expect(cat).toBeVisible();
+  await expect(cat).toHaveAttribute("data-ready", "true");
   await expect(cat).toHaveCSS("pointer-events", "none");
 
   if (test.info().project.name === "desktop") {
